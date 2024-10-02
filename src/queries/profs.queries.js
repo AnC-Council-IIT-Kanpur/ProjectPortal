@@ -1,4 +1,4 @@
-const createProfStatusENUM = `CREATE TYPE professor_status AS ENUM ('ACTIVE', 'INACTIVE', 'NR');`
+const createProfStatusENUM = `CREATE TYPE professor_status AS ENUM ('ACTIVE', 'INACTIVE', 'NR');`;
 const createProfTable = `
 CREATE TABLE professor (
     prof_id SERIAL PRIMARY KEY, 
@@ -22,7 +22,7 @@ CREATE TABLE professor (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp (automatic)
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp (automatic)
 );
-`
+`;
 
 export function createProfessorInsertQuery(professor) {
     return `
@@ -33,21 +33,21 @@ export function createProfessorInsertQuery(professor) {
     ) VALUES (
         '${professor.username}', 
         '${professor.password}', 
-        '${professor.title || ''}', 
+        '${professor.title || ""}', 
         '${professor.first_name}', 
-        '${professor.middle_name || ''}', 
+        '${professor.middle_name || ""}', 
         '${professor.last_name}', 
         '${professor.email}', 
-        '${professor.office_phone || ''}', 
+        '${professor.office_phone || ""}', 
         '${professor.department}', 
-        '${professor.office_location || ''}', 
-        '${professor.research_area || ''}', 
-        '${professor.bio || ''}', 
-        '${professor.profile_picture_url || 'prof_default_dp'}', 
-        '${professor.office_hours || ''}', 
-        '${professor.website_url || ''}', 
+        '${professor.office_location || ""}', 
+        '${professor.research_area || ""}', 
+        '${professor.bio || ""}', 
+        '${professor.profile_picture_url || "prof_default_dp"}', 
+        '${professor.office_hours || ""}', 
+        '${professor.website_url || ""}', 
         '${JSON.stringify(professor.research_domain || [])}', 
-        '${professor.status || 'NR'}'  -- Default to 'NR' if status is not provided
+        '${professor.status || "NR"}'  -- Default to 'NR' if status is not provided
     );
     `;
 }

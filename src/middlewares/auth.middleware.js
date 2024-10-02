@@ -9,13 +9,24 @@ dotenv.config({ path: "././.env" });
 
 export const verifyProfJWT = asyncHandler(async (req, res, next) => {
     const token = req.cookies?.accessToken;
-    if (!token) return res.status(401).send(new ApiResponse(401, "No access token provided", "Unauthorized request"));
+    if (!token)
+        return res
+            .status(401)
+            .send(
+                new ApiResponse(
+                    401,
+                    "No access token provided",
+                    "Unauthorized request"
+                )
+            );
 
     let decodedToken;
     try {
-        decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+        decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     } catch (err) {
-        return res.status(401).send(new ApiResponse(401, err, "Unauthorized request"));
+        return res
+            .status(401)
+            .send(new ApiResponse(401, err, "Unauthorized request"));
     }
 
     const query = searchProfByUsernameOrEmailQuery;
@@ -25,11 +36,21 @@ export const verifyProfJWT = asyncHandler(async (req, res, next) => {
         const queryResponse = await pool.query(query, values);
         user = queryResponse.rows[0];
     } catch (err) {
-        return res.status(500).send(new ApiResponse(500, err, "Unable to reach database, at this moment"));
+        return res
+            .status(500)
+            .send(
+                new ApiResponse(
+                    500,
+                    err,
+                    "Unable to reach database, at this moment"
+                )
+            );
     }
 
     if (!user || user.length === 0) {
-        return res.status(404).send(new ApiResponse(404, null, "User not found"));
+        return res
+            .status(404)
+            .send(new ApiResponse(404, null, "User not found"));
     }
 
     user.password = undefined;
