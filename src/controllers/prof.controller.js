@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { pool } from "../db/index.js";
 import dotenv from "dotenv";
 import { searchProfByUsernameOrEmailQuery } from "../queries/profs.queries.js";
+import { createProjectInsertQuery } from "../queries/projects.queries.js";
 
 dotenv.config({ path: "././.env" });
 
@@ -106,4 +107,53 @@ const logout = asyncHandler(async (req, res) => {
         .send(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
-export { checkHealth, login, logout };
+const createProject = asyncHandler(async (req,res) => {
+    const {title, description, field_of_study, skills_required,project_type, stage, progress_percentage, start_date, end_date, vacancies, status, application_deadline, total_applications,resource_links, enrolled_count, enrollment_criteria} = req.body;
+
+    const prof_id = req.user.prof_id;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(400)
+            .send(
+                new ApiResponse(
+                    400,
+                    errors.array(),
+                    "Validation error, empty fields"
+                )
+            );
+    }
+    try {
+        const query = createProjectInsertQuery({
+            title,
+            description,
+            prof_id, //coming from jwt, not req.body
+            field_of_study,
+            skills_required,
+            project_type,
+            stage,
+            progress_percentage,
+            start_date,
+            end_date,
+            vacancies,
+            status,
+            application_deadline,
+            total_applications,
+            resource_links,
+            enrolled_count,
+            enrollment_criteria,
+        });
+        await pool.query(query)
+        return res
+            .status(201)
+            .send(new ApiResponse(201, {}, "Project created successfully"));
+    }catch (err){
+        return res.status(500).send(new ApiResponse(500, err, "Failed to create project"))
+    }
+
+
+
+})
+
+export { checkHealth, login, logout, createProject };

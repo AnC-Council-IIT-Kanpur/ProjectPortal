@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkHealth, login, logout } from "../controllers/prof.controller.js";
+import { checkHealth, login, logout, createProject } from "../controllers/prof.controller.js";
 import { body } from "express-validator";
 import { verifyProfJWT } from "../middlewares/auth.middleware.js";
 import { ApiResponse } from "../utils/ApiErrorRes.js";
@@ -28,5 +28,6 @@ router.route("/checkAuth").get(verifyProfJWT, (req, res) => {
 });
 
 router.route("/logout").post(verifyProfJWT, logout);
+router.route("/createProject").post(verifyProfJWT,createProject)
 
 export default router;
