@@ -1,4 +1,9 @@
+const createGenderENUM = `
+CREATE TYPE gender_type AS ENUM ('Male', 'Female', 'Other', 'Prefer not to say');
+`;
+
 const createProfStatusENUM = `CREATE TYPE professor_status AS ENUM ('ACTIVE', 'INACTIVE', 'NR');`;
+
 const createProfTable = `
 CREATE TABLE professor (
     prof_id SERIAL PRIMARY KEY, 
@@ -18,18 +23,17 @@ CREATE TABLE professor (
     office_hours VARCHAR(100),                 -- Office hours details (optional)
     website_url TEXT,                          -- Link to personal website or professional page (optional)
     research_domain JSON,                      -- List of research domains as JSON (optional)
+    gender gender_type,                        -- Gender of the professor (required)
     status professor_status NOT NULL DEFAULT 'NR',  -- ENUM field for status (required, default is 'NR')
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Record creation timestamp (automatic)
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Record update timestamp (automatic)
 );
-`;
-
-export function createProfessorInsertQuery(professor) {
+`;export function createProfessorInsertQuery(professor) {
     return `
     INSERT INTO professor (
         username, password, title, first_name, middle_name, last_name, email, 
         office_phone, department, office_location, research_area, bio, 
-        profile_picture_url, office_hours, website_url, research_domain, status
+        profile_picture_url, office_hours, website_url, research_domain, gender, status
     ) VALUES (
         '${professor.username}', 
         '${professor.password}', 
@@ -47,10 +51,12 @@ export function createProfessorInsertQuery(professor) {
         '${professor.office_hours || ""}', 
         '${professor.website_url || ""}', 
         '${JSON.stringify(professor.research_domain || [])}', 
+        '${professor.gender || ""}',
         '${professor.status || "NR"}'  -- Default to 'NR' if status is not provided
     );
     `;
 }
+
 
 export const searchProfByUsernameOrEmailQuery = `
     SELECT * FROM professor
