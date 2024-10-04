@@ -1,5 +1,15 @@
 import { Router } from "express";
-import { checkHealth, login, logout, createProject } from "../controllers/prof.controller.js";
+import {
+    checkHealth,
+    login,
+    logout,
+    createProject,
+    getAllProjects,
+    getProjectById,
+    updateProjectById,
+    deleteProjectById,
+    getProjectsByProfId,
+} from "../controllers/prof.controller.js";
 import { body } from "express-validator";
 import { verifyProfJWT } from "../middlewares/auth.middleware.js";
 import { ApiResponse } from "../utils/ApiErrorRes.js";
@@ -27,7 +37,14 @@ router.route("/checkAuth").get(verifyProfJWT, (req, res) => {
         .send(new ApiResponse(200, req.user, "User is authenticated"));
 });
 
+router.get("/projects", getAllProjects);
 router.route("/logout").post(verifyProfJWT, logout);
-router.route("/createProject").post(verifyProfJWT,createProject)
+router.route("/").post(verifyProfJWT, createProject);
+router.get("/:prof_id", getProjectsByProfId);
+router
+    .route("/:project_id")
+    .get(getProjectById)
+    .put(verifyProfJWT, updateProjectById)
+    .delete(verifyProfJWT, deleteProjectById);
 
 export default router;
