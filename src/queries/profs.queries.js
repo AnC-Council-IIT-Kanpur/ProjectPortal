@@ -56,3 +56,30 @@ export const searchProfByUsernameOrEmailQuery = `
     SELECT * FROM professor
     WHERE email = $1 OR username = $2;
     `;
+
+const createNoticeTable = `
+CREATE TABLE IF NOT EXISTS public.notice
+ (
+    notice_id integer NOT NULL DEFAULT nextval('notice_notice_id_seq'::regclass),
+    body text COLLATE pg_catalog."default" NOT NULL,
+    subject character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    created_at timestamp with time zone DEFAULT now(),
+    generated_by character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT notice_pkey PRIMARY KEY (notice_id)
+ )
+    TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.notice
+    OWNER to sachida;
+`;
+
+export function createNoticeInsertQuery(notice) {
+    return `
+    INSERT INTO notice (
+        body,subject
+    ) VALUES (
+        '${notice.body}', 
+        '${notice.subject}', 
+    );
+    `;
+}

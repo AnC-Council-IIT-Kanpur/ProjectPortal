@@ -106,4 +106,22 @@ const logout = asyncHandler(async (req, res) => {
         .send(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
-export { checkHealth, login, logout };
+const notice = asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res
+            .status(400)
+            .send(
+                new ApiResponse(
+                    400,
+                    errors.array(),
+                    "Validation error, empty fields"
+                )
+            );
+    }
+    return res
+        .status(200)
+        .send(new ApiResponse(200, { Notice: "Added" }, "New notice is added"));
+});
+
+export { checkHealth, login, logout, notice };
