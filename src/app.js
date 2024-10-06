@@ -19,9 +19,11 @@ app.use(express.static("public"));
 //import routes here
 import userRoutes from "./routes/user.route.js";
 import profRoutes from "./routes/prof.route.js";
+import studentRoutes from "./routes/student.route.js"
 
 //routes use declaration
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/prof", profRoutes);
+app.use("/api/v1/student", studentRoutes);
 
 export { app };
