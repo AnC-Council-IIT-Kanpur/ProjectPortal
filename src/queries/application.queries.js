@@ -1,6 +1,3 @@
-// application.queries.js
-
-// Insert application into the application table
 export function createApplicationInsertQuery(application) {
   return `
   INSERT INTO application (
@@ -17,18 +14,19 @@ export function createApplicationInsertQuery(application) {
   `;
 }
 
+
 // Query to fetch the project title by project_id
 export const searchProjectByIdQuery = `
-  SELECT project_id, title 
+  SELECT project_id, title, prof_id 
   FROM project
   WHERE project_id = $1;
 `;
 
-// Query to update the application
+// Query to update the application by application_id
 export const applicationUpdateQuery = `
     UPDATE application
-    SET deadline = $1, status = $2
-    WHERE project_id = $3
+    SET deadline = $1, status = $2, updated_at = CURRENT_TIMESTAMP
+    WHERE application_id = $3
     RETURNING *;
 `;
 
